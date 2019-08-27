@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 // Routes
 app.use('/api', require('./routes/index'));
-//app.use('/api/states', require('./routes/states'));
+app.use('/api/users', require('./routes/user'));
 
 
 //Setting up server
