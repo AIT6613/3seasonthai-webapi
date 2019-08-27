@@ -43,7 +43,7 @@ function query(sql, callback) {
 */
 
 router.get('/', (req, res) => {
-	res.send('Enrolments');
+	res.send('Users');
 });
 
 /*
