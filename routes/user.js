@@ -4,6 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 var sql = require('../db.js');
+var webToken = require('../configs/key').webToken;
 
 // Body Parser Middleware
 router.use(express.json());
@@ -31,7 +32,9 @@ router.get('/', (req, res) => {
 
 
 // Retrieve all users 
-router.get('/get/all', (req, res) => {
+router.post('/get/all', (req, res) => {
+	if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+
 	sql.query('SELECT * FROM OWNERS', function (error, results, fields) {
 		if (error) throw error;
 		return res.send({ error: false, data: results, message: 'users list.' });
