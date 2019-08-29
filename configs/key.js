@@ -2,9 +2,10 @@ module.exports = {
   // configuration database
   dbUser: 'root',
   dbPassword: 'externalProject',
-  //dbServer: '172.16.6.78', 
-  dbServer: 'http://ec2-52-14-34-92.us-east-2.compute.amazonaws.com', 
+  //dbServer: 'http://ec2-52-14-34-92.us-east-2.compute.amazonaws.com', 
+  dbServer: 'localhost', 
   dbDatabase: '3SeasonThai',
+  dbPort: '3306'
 
   /*
   // configuration email

@@ -3,12 +3,7 @@ const Joi = require('joi'); // use for validation
 const express = require("express");
 const router = express.Router();
 
-var config = {
-	user: require('../configs/key').dbUser,
-	password: require('../configs/key').dbPassword,
-	database: require('../configs/key').dbDatabase,
-	server: require('../configs/key').dbServer
-}
+var sql = require('../db.js');
 
 // Body Parser Middleware
 router.use(express.json());
@@ -26,38 +21,24 @@ router.use(function (req, res, next) {
 	next();
 });
 
-/*
-function query(sql, callback) {
-	var mssql = require('mysql');
 
-	new mssql.ConnectionPool(config).connect().then(pool => {
-		return pool.request().query(sql)
-	}).then(result => {
-		callback(result);
-		mssql.close();
-	}).catch(err => {
-		console.log(err);
-		mssql.close();
-	});
-}
-*/
+
+
 
 router.get('/', (req, res) => {
 	res.send('Users');
 });
 
-/*
+
+// Retrieve all users 
 router.get('/get/all', (req, res) => {
-	// create sql command
-	var sql = "SELECT * FROM Enrolments";
-	// query data
-	query(sql, function (record) {
-		// create dataset from  callback data
-		var data = record.recordset;
-		// send data back
-		res.send(data);
+	sql.query('SELECT * FROM OWNERS', function (error, results, fields) {
+		if (error) throw error;
+		return res.send({ error: false, data: results, message: 'users list.' });
 	});
 });
+
+/*
 
 router.get('/get/enrolmentLists', (req, res) => {
 	// create sql command
