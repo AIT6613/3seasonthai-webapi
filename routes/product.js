@@ -23,7 +23,7 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', (req, res) => {
-	res.send('Users');
+	res.send('Products');
 });
 
 
@@ -31,9 +31,9 @@ router.get('/', (req, res) => {
 router.get('/get/all', (req, res) => {
 	//if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
-	sql.query('SELECT * FROM MUNEITEMS', function (error, results, fields) {
+	sql.query('SELECT * FROM MENUITEMS', function (error, results, fields) {
 		if (error) throw error;
-		return res.send({ error: false, data: results, message: 'users list.' });
+		return res.send({ error: false, data: results, message: 'product list.' });
 	});
 });
 
