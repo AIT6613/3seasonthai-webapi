@@ -37,6 +37,16 @@ router.get('/get/all', (req, res) => {
 	});
 });
 
+router.get('/get/product/:id', (req, res) => {
+  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+  var productId = req.params.id
+
+	sql.query('SELECT * FROM MENUITEMS WHERE id='+ productId, function (error, results, fields) {
+		if (error) throw error;
+		return res.send({ error: false, data: results, message: 'product list.' });
+	});
+});
+
 /*
 
 router.get('/get/enrolmentLists', (req, res) => {
