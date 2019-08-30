@@ -22,18 +22,14 @@ router.use(function (req, res, next) {
 	next();
 });
 
-
-
-
-
 router.get('/', (req, res) => {
 	res.send('Users');
 });
 
 
 // Retrieve all users 
-router.post('/get/all', (req, res) => {
-	if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+router.get('/get/all', (req, res) => {
+	//if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
 	sql.query('SELECT * FROM OWNERS', function (error, results, fields) {
 		if (error) throw error;
