@@ -3,8 +3,8 @@ module.exports = {
   dbUser: '6613',
   dbPassword: 'externalProject',
   //dbServer: 'http://ec2-52-14-34-92.us-east-2.compute.amazonaws.com', 
-  dbServer: 'ec2-18-191-128-22.us-east-2.compute.amazonaws.com', 
-  dbDatabase: '3SeasonThai',
+  dbServer: 'ec2-3-14-6-238.us-east-2.compute.amazonaws.com', 
+  dbDatabase: '3seasonthai',
   dbPort: '3306',
   webToken: 'ouh8nvFxig0Hd9N-v’3:u:yjowmp'
 
