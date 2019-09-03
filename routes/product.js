@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 });
 
 
-// Retrieve all users 
+// Retrieve all product 
 router.get('/get/all', (req, res) => {
   //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
@@ -43,13 +43,14 @@ router.get('/get/product/:id', (req, res) => {
 
   sql.query('SELECT * FROM MENUITEMS WHERE id=' + productId, function (error, results, fields) {
     if (error) throw error;
-    return res.send({ error: false, data: results, message: 'product list.' });
+    return res.send({ error: false, data: results, message: 'product detail.' });
   });
 });
 
 // Add a new product  
 router.post('/addNew', function (req, res) {
   let product = req.body;
+  
   console.log(product);
   if (!product) {
     return res.status(400).send({ error: true, message: 'Please provide product' });
@@ -83,7 +84,7 @@ router.delete('/delete', function (req, res) {
   // delete record on database by id
   sql.query('DELETE FROM MENUITEMS WHERE id = ?', [productId], function (error, results, fields) {
     if (error) throw error;
-    return res.send({ error: false, data: results, message: 'Product has been updated successfully.' });
+    return res.send({ error: false, data: results, message: 'Product has been delete successfully.' });
   });
 });
 
