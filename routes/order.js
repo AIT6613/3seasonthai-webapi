@@ -108,7 +108,7 @@ router.delete('/delete/order', function (req, res) {
 router.get('/get/all/orderDetail', (req, res) => {
   //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
-  sql.query('SELECT * FROM ORDERSDETAILS', function (error, results, fields) {
+  sql.query('SELECT * FROM ORDERDETAILS', function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order detail list.' });
   });
