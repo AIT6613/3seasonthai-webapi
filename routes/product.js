@@ -55,7 +55,7 @@ router.post('/addNew', function (req, res) {
   if (!product) {
     return res.status(400).send({ error: true, message: 'Please provide product' });
   }
-  sql.query("INSERT INTO MENUITEMS SET ? ", { name: product.name, description: product.description, pictureName: product.pictureName, price: product.price, isAvailable: product.isAvailable }, function (error, results, fields) {
+  sql.query("INSERT INTO MENUITEMS SET ? ", { name: product.name, description: product.description, pictureName: product.pictureName, price: product.price, isAvailable: product.isAvailable, isSelectMeatChoice: product.isSelectMeatChoice }, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'New product has been created successfully.' });
   });
@@ -68,7 +68,7 @@ router.put('/update', function (req, res) {
   if (!productId || !product) {
     return res.status(400).send({ error: product, message: 'Please provide product and productId' });
   }
-  sql.query("UPDATE MENUITEMS SET ? WHERE id = ?", [{ name: product.name, description: product.description, pictureName: product.pictureName, price: product.price, isAvailable: product.isAvailable }, productId], function (error, results, fields) {
+  sql.query("UPDATE MENUITEMS SET ? WHERE id = ?", [{ name: product.name, description: product.description, pictureName: product.pictureName, price: product.price, isAvailable: product.isAvailable, isSelectMeatChoice: product.isSelectMeatChoice }, productId], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'product has been updated successfully.' });
    });
