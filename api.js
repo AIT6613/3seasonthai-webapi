@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 // Routes
 app.use('/api', require('./routes/index'));
 app.use('/api/users', require('./routes/user'));
-app.use('/api/products', require('./routes/product'));
+app.use('/api/menus', require('./routes/menu'));
 app.use('/api/orders', require('./routes/order'));
 
 
