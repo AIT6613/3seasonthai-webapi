@@ -29,7 +29,6 @@ router.get('/', (req, res) => {
 
 // Retrieve all product 
 router.get('/get/all', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
   sql.query('SELECT * FROM MENUITEMS', function (error, results, fields) {
     if (error) throw error;
@@ -39,7 +38,6 @@ router.get('/get/all', (req, res) => {
 
 // Retrieve all munu type 
 router.get('/get/all/menuType', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
   sql.query('SELECT * FROM MENUTYPES', function (error, results, fields) {
     if (error) throw error;
@@ -47,18 +45,7 @@ router.get('/get/all/menuType', (req, res) => {
   });
 });
 
-// Retrieve all meat type 
-router.get('/get/all/meatType', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
-
-  sql.query('SELECT * FROM MEATTYPES', function (error, results, fields) {
-    if (error) throw error;
-    return res.send({ error: false, data: results, message: 'All meat type list.' });
-  });
-});
-
 router.get('/get/menu/:id', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
   var id = req.params.id
 
   sql.query('SELECT * FROM MENUITEMS WHERE id=' + id, function (error, results, fields) {
@@ -68,7 +55,6 @@ router.get('/get/menu/:id', (req, res) => {
 });
 
 router.get('/get/menuByType/:menuTypeId', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
   var menuTypeId = req.params.menuTypeId
 
   sql.query('SELECT * FROM MENUITEMS WHERE menuTypeId=' + menuTypeId, function (error, results, fields) {
@@ -77,15 +63,14 @@ router.get('/get/menuByType/:menuTypeId', (req, res) => {
   });
 });
 
-// Add a new product  
+// Add a new menu  
 router.post('/addNew', function (req, res) {
   let menu = req.body;
   let pictureName = req.body.pictureName;
-  if (!pictureName)
-  {
+  if (!pictureName) {
     pictureName = "";
   }
-  
+
   console.log(menu);
   if (!menu) {
     return res.status(400).send({ error: true, message: 'Please provide product' });
@@ -106,8 +91,8 @@ router.put('/update', function (req, res) {
   sql.query("UPDATE MENUITEMS SET ? WHERE id = ?", [{ name: menu.name, description: menu.description, pictureName: menu.pictureName, price: menu.price, isAvailable: menu.isAvailable, isSelectMeatChoice: menu.isSelectMeatChoice, menuTypeId: menu.menuTypeId }, menuId], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'menu has been updated successfully.' });
-   });
   });
+});
 
 // delete product
 router.delete('/delete', function (req, res) {
@@ -120,6 +105,189 @@ router.delete('/delete', function (req, res) {
   sql.query('DELETE FROM MENUITEMS WHERE id = ?', [id], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'Product has been delete successfully.' });
+  });
+});
+
+// SYMBOL ===============================================================================
+// Retrieve all symbol
+router.get('/get/all/symbol', (req, res) => {
+  sql.query('SELECT * FROM SYMBOLTYPES', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'All symbol list.' });
+  });
+});
+
+// Retrived symbol by id
+router.get('/get/symbol/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM SYMBOLTYPES WHERE id=' + id, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'symbol detail.' });
+  });
+});
+
+// Add a new symbol  
+router.post('/addNew/symbol', function (req, res) {
+  let symbol = req.body;
+
+  if (!symbol) {
+    return res.status(400).send({ error: true, message: 'Please provide symbol' });
+  }
+  sql.query("INSERT INTO SYMBOLTYPES SET ? ", { name: symbol.name }, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'New symbol has been created successfully.' });
+  });
+});
+
+// update symbol
+router.put('/update/symbol', function (req, res) {
+  let symbolId = req.body.id;
+  let symbol = req.body;
+  if (!symbolId || !symbol) {
+    return res.status(400).send({ error: symbol, message: 'Please provide symbol and symbolId' });
+  }
+  sql.query("UPDATE SYMBOLTYPES SET ? WHERE id = ?", [{ name: symbol.name }, symbolId], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'symbol has been updated successfully.' });
+  });
+});
+
+// delete symbol
+router.delete('/delete/symbol', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide symbol id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM SYMBOLTYPES WHERE id = ?', [id], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'symbol has been delete successfully.' });
+  });
+});
+
+
+// MenuSymbols ===============================================================================
+// Retrieve all menu symbol
+router.get('/get/all/menuSymbol', (req, res) => {
+  sql.query('SELECT * FROM MENUSYMBOLS', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'All menu symbol list.' });
+  });
+});
+
+// Retrived menu symbol by id
+router.get('/get/menuSymbol/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM MENUSYMBOLS WHERE id=' + id, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'menu symbol detail.' });
+  });
+});
+
+// Add a new menu symbol  
+router.post('/addNew/menuSymbol', function (req, res) {
+  let menuSymbol = req.body;
+
+  if (!menuSymbol) {
+    return res.status(400).send({ error: true, message: 'Please provide menu symbol' });
+  }
+  sql.query("INSERT INTO MENUSYMBOLS SET ? ", { menuItemId: menuSymbol.menuItemId, symbolId: menuSymbol.symbolId }, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'New symbol has been created successfully.' });
+  });
+});
+
+// update menu symbol
+router.put('/update/menuSymbol', function (req, res) {
+  let menuSymbolId = req.body.id;
+  let menuSymbol = req.body;
+  if (!menuSymbolId || !menuSymbol) {
+    return res.status(400).send({ error: symbol, message: 'Please provide menu menuSymbol and menuSymbolId' });
+  }
+  sql.query("UPDATE MENUSYMBOLS SET ? WHERE id = ?", [{ menuItemId: menuSymbol.menuItemId, symbolId: menuSymbol.symbolId }, menuSymbolId], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu symbol has been updated successfully.' });
+  });
+});
+
+// delete menu symbol
+router.delete('/delete/menuSymbol', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide menu symbol id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM MENUSYMBOLS WHERE id = ?', [id], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'symbol has been delete successfully.' });
+  });
+});
+
+// MEATTYPES ===============================================================================
+// Retrieve all meat type 
+router.get('/get/all/meatType', (req, res) => {
+
+  sql.query('SELECT * FROM MEATTYPES', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'All meat type list.' });
+  });
+});
+
+// Retrived meat type by id
+router.get('/get/meatType/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM MEATTYPES WHERE id=' + id, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'meat type detail.' });
+  });
+});
+
+// Add a new meat type  
+router.post('/addNew/meatType', function (req, res) {
+  let meatType = req.body;
+
+  if (!meatType) {
+    return res.status(400).send({ error: true, message: 'Please provide meaType' });
+  }
+  sql.query("INSERT INTO MEATTYPES SET ? ", { name: meatType.name }, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'New meat type has been created successfully.' });
+  });
+});
+
+// update meat type
+router.put('/update/meatType', function (req, res) {
+  let meatTypeId = req.body.id;
+  let meatType = req.body;
+  if (!meatTypeId || !meatType) {
+    return res.status(400).send({ error: meatType, message: 'Please provide meatType and meatTypelId' });
+  }
+  sql.query("UPDATE MEATTYPES SET ? WHERE id = ?", [{ name: meatType.name }, meatTypeId], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'meat type has been updated successfully.' });
+  });
+});
+
+// delete meat type
+router.delete('/delete/meatType', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide meat type id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM MEATTYPES WHERE id = ?', [id], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'meat type has been delete successfully.' });
   });
 });
 
