@@ -36,15 +36,6 @@ router.get('/get/all', (req, res) => {
   });
 });
 
-// Retrieve all munu type 
-router.get('/get/all/menuType', (req, res) => {
-
-  sql.query('SELECT * FROM MENUTYPES', function (error, results, fields) {
-    if (error) throw error;
-    return res.send({ error: false, data: results, message: 'All menu type list.' });
-  });
-});
-
 router.get('/get/menu/:id', (req, res) => {
   var id = req.params.id
 
@@ -236,7 +227,9 @@ router.delete('/delete/menuSymbol', function (req, res) {
 router.get('/get/all/meatType', (req, res) => {
 
   sql.query('SELECT * FROM MEATTYPES', function (error, results, fields) {
-    if (error) throw error;
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
     return res.send({ error: false, data: results, message: 'All meat type list.' });
   });
 });
@@ -246,7 +239,9 @@ router.get('/get/meatType/:id', (req, res) => {
   var id = req.params.id
 
   sql.query('SELECT * FROM MEATTYPES WHERE id=' + id, function (error, results, fields) {
-    if (error) throw error;
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
     return res.send({ error: false, data: results, message: 'meat type detail.' });
   });
 });
@@ -259,7 +254,9 @@ router.post('/addNew/meatType', function (req, res) {
     return res.status(400).send({ error: true, message: 'Please provide meaType' });
   }
   sql.query("INSERT INTO MEATTYPES SET ? ", { name: meatType.name }, function (error, results, fields) {
-    if (error) throw error;
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
     return res.send({ error: false, data: results, message: 'New meat type has been created successfully.' });
   });
 });
@@ -272,7 +269,9 @@ router.put('/update/meatType', function (req, res) {
     return res.status(400).send({ error: meatType, message: 'Please provide meatType and meatTypelId' });
   }
   sql.query("UPDATE MEATTYPES SET ? WHERE id = ?", [{ name: meatType.name }, meatTypeId], function (error, results, fields) {
-    if (error) throw error;
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
     return res.send({ error: false, data: results, message: 'meat type has been updated successfully.' });
   });
 });
@@ -286,8 +285,179 @@ router.delete('/delete/meatType', function (req, res) {
   }
   // delete record on database by id
   sql.query('DELETE FROM MEATTYPES WHERE id = ?', [id], function (error, results, fields) {
-    if (error) throw error;
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
     return res.send({ error: false, data: results, message: 'meat type has been delete successfully.' });
+  });
+});
+
+// MENUCHOICEPRICES ===============================================================================
+// Retrieve all menu choice
+router.get('/get/all/menuChoice', (req, res) => {
+
+  sql.query('SELECT * FROM MENUCHOICES', function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'All menu choice list.' });
+  });
+});
+
+// Retrived menu choice by id
+router.get('/get/menuChoice/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM MENUCHOICES WHERE id=' + id, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu choice detail.' });
+  });
+});
+
+// Retrived menu choice by menu id
+router.get('/get/menuChoiceByMenuId/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM MENUCHOICES WHERE menuId=' + id, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu choice list filter by menu id.' });
+  });
+});
+
+// Add a new menu choice
+router.post('/addNew/menuChoice', function (req, res) {
+  let menuChoice = req.body;
+
+  if (!menuChoice) {
+    return res.status(400).send({ error: true, message: 'Please provide menuChoice' });
+  }
+  sql.query("INSERT INTO MENUCHOICES SET ? ", { menuId: menuChoice.menuId, meatTypeId: menuChoice.meatTypeId, price: menuChoice.price }, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'New menu choice has been created successfully.' });
+  });
+});
+
+// update menu choice
+router.put('/update/menuChoice', function (req, res) {
+  let menuChoiceId = req.body.id;
+  let menuChoice = req.body;
+  if (!menuChoiceId || !menuChoice) {
+    return res.status(400).send({ error: menuChoice, message: 'Please provide menuChoice and menuChoiceId' });
+  }
+  sql.query("UPDATE MENUCHOICES SET ? WHERE id = ?", [{ menuId: menuChoice.menuId, meatTypeId: menuChoice.meatTypeId, price: menuChoice.price }, menuChoiceId], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu choice has been updated successfully.' });
+  });
+});
+
+// delete menu choice
+router.delete('/delete/menuChoice', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide menu choice id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM MENUCHOICES WHERE id = ?', [id], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu choice has been delete successfully.' });
+  });
+});
+
+// delete menu choice by menu id
+router.delete('/delete/menuChoiceByMenuId', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide menu choice id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM MENUCHOICES WHERE menuId = ?', [id], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu choice has been delete by menu id successfully.' });
+  });
+});
+
+
+// MENUTYPES ===============================================================================
+// Retrieve all munu type 
+router.get('/get/all/menuType', (req, res) => {
+
+  sql.query('SELECT * FROM MENUTYPES', function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'All menu type list.' });
+  });
+});
+
+// Retrived menu type by id
+router.get('/get/menuType/:id', (req, res) => {
+  var id = req.params.id
+
+  sql.query('SELECT * FROM MENUTYPES WHERE id=' + id, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu type detail.' });
+  });
+});
+
+// Add a new menu type
+router.post('/addNew/menuType', function (req, res) {
+  let menuType = req.body;
+
+  if (!menuType) {
+    return res.status(400).send({ error: true, message: 'Please provide menuType' });
+  }
+  sql.query("INSERT INTO MENUTYPES SET ? ", { name: menuType.name }, function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'New menu type has been created successfully.' });
+  });
+});
+
+// update menu type
+router.put('/update/menuType', function (req, res) {
+  let menuTypeId = req.body.id;
+  let menuType = req.body;
+  if (!menuTypeId || !menuType) {
+    return res.status(400).send({ error: menuType, message: 'Please provide menuType and menuTypeId' });
+  }
+  sql.query("UPDATE MENUTYPES SET ? WHERE id = ?", [{ name: menuType.name }, menuTypeId], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu type has been updated successfully.' });
+  });
+});
+
+// delete menu type
+router.delete('/delete/menuType', function (req, res) {
+  let id = req.body.id;
+  // check if not have symbol id, return error
+  if (!id) {
+    return res.status(400).send({ error: true, message: 'Please provide menu type id' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM MENUTYPES WHERE id = ?', [id], function (error, results, fields) {
+    if (error) {
+      return res.status(400).send({ error: true, errorDetail: error });
+    }
+    return res.send({ error: false, data: results, message: 'menu type has been delete successfully.' });
   });
 });
 
