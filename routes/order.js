@@ -128,12 +128,12 @@ router.get('/get/orderDetail/:orderId', (req, res) => {
 router.post('/addNew/orderDetail', function (req, res) {
   let orderDetail = req.body;
   let orderId = req.body.orderId;
-  let productId = req.body.productId;
+  let menuId = req.body.menuId;
   console.log(orderDetail);
-  if (!orderDetail || !orderId || !productId) {
-    return res.status(400).send({ error: true, message: 'Please provide orderId, productId and order detail' });
+  if (!orderDetail || !orderId || !menuId) {
+    return res.status(400).send({ error: true, message: 'Please provide orderId, menuId and order detail' });
   }
-  sql.query("INSERT INTO ORDERDETAILS SET ? ", { orderId: orderId, productId: productId, qty: orderDetail.qty, price: orderDetail.price, amount: orderDetail.amount }, function (error, results, fields) {
+  sql.query("INSERT INTO ORDERDETAILS SET ? ", { orderId: orderId, menuId: menuId, meatTypeId: orderDetail.meatTypeId, qty: orderDetail.qty, price: orderDetail.price, amount: orderDetail.amount }, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'New order details has been created successfully.' });
   });
@@ -146,7 +146,7 @@ router.put('/update/orderDetail', function (req, res) {
   if (!orderDetailId || !orderDetail) {
     return res.status(400).send({ error: order, message: 'Please provide orderDetail and orderDetailId' });
   }
-  sql.query("UPDATE ORDERDETAILS SET ? WHERE id = ?", [{ orderId: orderDetail.orderId, productId: orderDetail.productId, qty: orderDetail.qty, price: orderDetail.price, amount: orderDetail.amount }, orderDetailId], function (error, results, fields) {
+  sql.query("UPDATE ORDERDETAILS SET ? WHERE id = ?", [{ orderId: orderDetail.orderId, menuId: orderDetail.menuId, meatTypeId: orderDetail.meatTypeId, qty: orderDetail.qty, price: orderDetail.price, amount: orderDetail.amount }, orderDetailId], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order detail has been updated successfully.' });
   });
