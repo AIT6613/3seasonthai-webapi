@@ -178,7 +178,78 @@ router.delete('/delete/orderDetailByOrderId', function (req, res) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'Order detail has been delete by order id successfully.' });
   });
+
+
 });
+
+
+
+// Delivery Address
+// Retrieve all delivery address
+router.get('/get/all/deliveryAddress', (req, res) => {
+  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+
+  sql.query('SELECT * FROM DELIVERYADDRESSES', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order delivery address.' });
+  });
+});
+
+router.get('/get/deliveryAddress/:deliveryAddressId', (req, res) => {
+  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+  var deliveryAddressId = req.params.deliveryAddressId
+
+  sql.query('SELECT * FROM DELIVERYADDRESSES WHERE deliveryAddressId=' + deliveryAddressId, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'delivery address list by order id.' });
+  });
+});
+
+// Add a new delivery address  
+router.post('/addNew/deliveryAddress', function (req, res) {
+  let deliveryAddress = req.body;
+
+  console.log(deliveryAddress);
+  if (!deliveryAddress) {
+    return res.status(400).send({ error: true, message: 'Please provide delivery address' });
+  }
+  sql.query("INSERT INTO DELIVERYADDRESSES SET ? ", { address: deliveryAddress.address, contactName: deliveryAddress.contactName, telephone: deliveryAddress.telephone}, function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'New delivery address has been created successfully.' });
+  });
+});
+
+// update delivery address
+router.put('/update/deliveryAddress', function (req, res) {
+  let deliveryAddressId = req.body.id;
+  let deliveryAddress = req.body;
+  if (!deliveryAddressId || !deliveryAddress) {
+    return res.status(400).send({ error: order, message: 'Please provide deliveryAddress and deliveryAddressId' });
+  }
+  sql.query("UPDATE DELIVERYADDRESSES SET ? WHERE id = ?", [{ address: deliveryAddress.address, contactName: deliveryAddress.contactName, telephone: deliveryAddress.telephone }, deliveryAddressId], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'delivery address has been updated successfully.' });
+  });
+});
+
+// delete delivery address
+router.delete('/delete/deliveryAddress', function (req, res) {
+  let deliveryAddressId = req.body.id;
+  // check if not have delivery address id, return error
+  if (!deliveryAddressId) {
+    return res.status(400).send({ error: true, message: 'Please provide deliveryAddressId' });
+  }
+  // delete record on database by id
+  sql.query('DELETE FROM DELIVERYADDRESSES WHERE id = ?', [deliveryAddressId], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'Delivery address has been delete successfully.' });
+  });
+});
+
+
+
+
+
 
 /*
 function validateEnrolment(enrolment) {
