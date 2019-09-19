@@ -106,7 +106,6 @@ router.delete('/delete/order', function (req, res) {
 
 // Retrieve all order details
 router.get('/get/all/orderDetail', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
   sql.query('SELECT * FROM ORDERDETAILS', function (error, results, fields) {
     if (error) throw error;
@@ -114,8 +113,16 @@ router.get('/get/all/orderDetail', (req, res) => {
   });
 });
 
+// Retrieve all order list
+router.get('/get/all/orderList', (req, res) => {
+
+  sql.query('SELECT ORDERDETAILS.id, ORDERDETAILS.orderId, ORDERDETAILS.menuId, ORDERDETAILS.meatTypeId, ORDERDETAILS.qty, ORDERDETAILS.price, ORDERDETAILS.amount, MENUITEMS.name as menuName, MEATTYPES.name as meatTypeName FROM ORDERDETAILS INNER JOIN MENUITEMS ON ORDERDETAILS.menuId = MENUITEMS.id LEFT JOIN MEATTYPES ON ORDERDETAILS.meatTypeId = MEATTYPES.id', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order detail list.' });
+  });
+});
+
 router.get('/get/orderDetail/:orderId', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
   var orderId = req.params.orderId
 
   sql.query('SELECT * FROM ORDERDETAILS WHERE orderId=' + orderId, function (error, results, fields) {
