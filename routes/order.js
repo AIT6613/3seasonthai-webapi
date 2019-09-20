@@ -29,7 +29,6 @@ router.get('/', (req, res) => {
 
 // Retrieve all order 
 router.get('/get/all/order', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
 
   sql.query('SELECT * FROM ORDERS', function (error, results, fields) {
     if (error) throw error;
@@ -37,8 +36,18 @@ router.get('/get/all/order', (req, res) => {
   });
 });
 
+// Retrieve all order 
+router.get('/get/all/orderByCurrentDate', (req, res) => {
+  var d = getShortDateYYYYMMDD();
+  
+  sql.query('SELECT * FROM ORDERS WHERE DATE_FORMAT(ORDERS.orderDate, "%Y-%m-%d") = "'+d+'"', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order list.' });
+  });
+});
+
 router.get('/get/order/:id', (req, res) => {
-  //if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
+
   var orderId = req.params.id
 
   sql.query('SELECT * FROM ORDERS WHERE id=' + orderId, function (error, results, fields) {
@@ -253,7 +262,27 @@ router.delete('/delete/deliveryAddress', function (req, res) {
   });
 });
 
+function getShortDateYYYYMMDD() {
+  var shortDate;
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1;
 
+  var yyyy = today.getFullYear();
+  shortDate = yyyy.toString();
+  if (mm < 10) {
+    shortDate += '-0' + mm;
+  } else {
+    shortDate += '-' + mm;
+  }
+  if (dd < 10) {
+    shortDate += '-0' + dd;
+  } else {
+    shortDate += '-' + dd;
+  }
+
+  return shortDate;
+}
 
 
 
