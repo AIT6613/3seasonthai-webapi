@@ -86,8 +86,8 @@ router.put('/update', function (req, res) {
 });
 
 // delete product
-router.delete('/delete', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have product id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide productId' });
