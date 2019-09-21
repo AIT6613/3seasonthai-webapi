@@ -37,10 +37,17 @@ router.get('/get/all/order', (req, res) => {
 });
 
 // Retrieve all order list
-router.get('/get/all/orderByCurrentDate', (req, res) => {
-  var d = getShortDateYYYYMMDD();
+router.get('/get/all/activeOrder', (req, res) => {
+  //var d = getShortDateYYYYMMDD();
   
+  /*
   sql.query('SELECT * FROM ORDERS WHERE DATE_FORMAT(ORDERS.orderDate, "%Y-%m-%d") = "'+d+'" AND (status<>"Finish" AND status<>"Cancel")', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order list.' });
+  });
+  */
+
+  sql.query('SELECT * FROM ORDERS WHERE status<>"Finish" AND status<>"Cancel"', function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order list.' });
   });
