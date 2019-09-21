@@ -8,6 +8,7 @@ app.use('/api', require('./routes/index'));
 app.use('/api/users', require('./routes/user'));
 app.use('/api/menus', require('./routes/menu'));
 app.use('/api/orders', require('./routes/order'));
+app.use('/api/settings', require('./routes/setting'));
 
 
 //Setting up server
