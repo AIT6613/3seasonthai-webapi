@@ -2,6 +2,7 @@
 const Joi = require('joi'); // use for validation
 const express = require("express");
 const router = express.Router();
+var md5 = require('md5');
 
 var sql = require('../db.js');
 var webToken = require('../configs/key').webToken;
@@ -26,14 +27,74 @@ router.get('/', (req, res) => {
 	res.send('Users');
 });
 
-
 // Retrieve all users 
 router.get('/get/all', (req, res) => {
-	//if (!req.body.token || req.body.token != webToken) throw "You don't have permission";
-
 	sql.query('SELECT * FROM OWNERS', function (error, results, fields) {
 		if (error) throw error;
 		return res.send({ error: false, data: results, message: 'users list.' });
+	});
+});
+
+// check permission
+/*
+router.post('/checkPermisson',function (req, res) {
+	var user = req.body;
+	console.log(user);
+	
+	if (!user) {
+    return res.status(400).send({ error: user, message: 'Please provide user' });
+	}
+
+	var username = user.username;
+	var password = md5(user.password);
+
+
+	sql.query('SELECT * FROM OWNERS WHERE username = ? AND password = ?',[username, password], function (error, results, fields) {
+		if (error) throw error;
+
+		return res.send({ error: false, permission: true, message: 'check permission.' });
+
+	});
+});
+*/
+
+// check permission
+router.post('/checkPermission', function (req, res) {
+	let user = req.body;
+	if (!user) {
+		return res.status(400).send({ error: user, message: 'Please provide user' });
+	}
+
+	var username = user.username;
+	var password = md5(user.password);
+
+
+	sql.query('SELECT * FROM OWNERS WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
+		if (error) throw error;
+
+		if (results.length > 0)
+			return res.send({ error: false, permission: true, message: 'check permission.' });
+		else
+			return res.send({ error: false, permission: false, message: 'check permission.' });
+
+	});
+
+});
+
+
+// update password
+router.put('/update/password', function (req, res) {
+	let user = req.body;
+	if (!user) {
+		return res.status(400).send({ error: user, message: 'Please provide user' });
+	}
+
+	var hash = md5(user.password);
+	console.log(hash);
+
+	sql.query("UPDATE OWNERS SET ? WHERE id = ?", [{ username: user.username, password: hash }, user.id], function (error, results, fields) {
+		if (error) throw error;
+		return res.send({ error: false, data: results, message: 'user has been updated successfully.' });
 	});
 });
 
