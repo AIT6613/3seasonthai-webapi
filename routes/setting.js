@@ -38,10 +38,11 @@ router.get('/get/settingDetail', (req, res) => {
 // update open/close status
 router.put('/update/onlineStatus', function (req, res) {
   let isOpen = req.body.status;
-  if (!isOpen || (isOpen!=0 && isOpen!=1)) {
-    return res.status(400).send({ error: order, message: 'Please provide online status with integer number 0=close or 1=open' });
+  console.log(isOpen);
+  if (!isOpen) {
+    return res.status(400).send({ error: isOpen, message: 'Please provide online status with integer number 0=close or 1=open' });
   }
-  sql.query("UPDATE OPENINGHOURS SET ? WHERE id = ?", [{ isOpen: isOpen }, orderId], function (error, results, fields) {
+  sql.query("UPDATE OPENINGHOURS SET ? WHERE id = ?", [{ isOpen: isOpen }, 1], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order has been updated successfully.' });
   });
