@@ -145,8 +145,8 @@ router.put('/update/symbol', function (req, res) {
 });
 
 // delete symbol
-router.delete('/delete/symbol', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/symbol/:id', function (req, res) {
+  let id = req.params.id
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide symbol id' });
@@ -209,8 +209,8 @@ router.put('/update/menuSymbol', function (req, res) {
 });
 
 // delete menu symbol
-router.delete('/delete/menuSymbol', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/menuSymbol/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu symbol id' });
@@ -277,8 +277,8 @@ router.put('/update/meatType', function (req, res) {
 });
 
 // delete meat type
-router.delete('/delete/meatType', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/meatType/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide meat type id' });
@@ -359,8 +359,8 @@ router.put('/update/menuChoice', function (req, res) {
 });
 
 // delete menu choice
-router.delete('/delete/menuChoice', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/menuChoice/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu choice id' });
@@ -375,8 +375,8 @@ router.delete('/delete/menuChoice', function (req, res) {
 });
 
 // delete menu choice by menu id
-router.delete('/delete/menuChoiceByMenuId', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/menuChoiceByMenuId/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu choice id' });
@@ -446,8 +446,8 @@ router.put('/update/menuType', function (req, res) {
 });
 
 // delete menu type
-router.delete('/delete/menuType', function (req, res) {
-  let id = req.body.id;
+router.delete('/delete/menuType/:id', function (req, res) {
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu type id' });
