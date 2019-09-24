@@ -447,7 +447,7 @@ router.put('/update/menuType', function (req, res) {
 
 // delete menu type
 router.delete('/delete/menuType/:id', function (req, res) {
-  let id = req.params.id;
+  let id = req.params.id; 
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu type id' });
