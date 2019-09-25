@@ -253,7 +253,7 @@ router.post('/addNew/meatType', function (req, res) {
   if (!meatType) {
     return res.status(400).send({ error: true, message: 'Please provide meaType' });
   }
-  sql.query("INSERT INTO MEATTYPES SET ? ", { name: meatType.name }, function (error, results, fields) {
+  sql.query("INSERT INTO MEATTYPES SET ? ", { name: meatType.name, extraPrice: meatType.extraPrice }, function (error, results, fields) {
     if (error) {
       return res.status(400).send({ error: true, errorDetail: error });
     }
@@ -268,7 +268,7 @@ router.put('/update/meatType', function (req, res) {
   if (!meatTypeId || !meatType) {
     return res.status(400).send({ error: meatType, message: 'Please provide meatType and meatTypelId' });
   }
-  sql.query("UPDATE MEATTYPES SET ? WHERE id = ?", [{ name: meatType.name }, meatTypeId], function (error, results, fields) {
+  sql.query("UPDATE MEATTYPES SET ? WHERE id = ?", [{ name: meatType.name, extraPrice: meatType.extraPrice }, meatTypeId], function (error, results, fields) {
     if (error) {
       return res.status(400).send({ error: true, errorDetail: error });
     }
@@ -292,6 +292,7 @@ router.delete('/delete/meatType/:id', function (req, res) {
   });
 });
 
+/*
 // MENUCHOICEPRICES ===============================================================================
 // Retrieve all menu choice
 router.get('/get/all/menuChoice', (req, res) => {
@@ -389,6 +390,8 @@ router.delete('/delete/menuChoiceByMenuId/:id', function (req, res) {
     return res.send({ error: false, data: results, message: 'menu choice has been delete by menu id successfully.' });
   });
 });
+
+*/
 
 
 // MENUTYPES ===============================================================================
