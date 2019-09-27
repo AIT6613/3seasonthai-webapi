@@ -2,6 +2,7 @@
 const Joi = require('joi'); // use for validation
 const express = require("express");
 const router = express.Router();
+const moment = require("moment");
 
 var sql = require('../db.js');
 var webToken = require('../configs/key').webToken;
@@ -36,6 +37,19 @@ router.get('/get/all/order', (req, res) => {
   });
 });
 
+// retrived order summary by date
+// Retrieve all order list
+router.get('/get/summaryOrder/:year/:month', (req, res) => {
+  var y = req.params.year;
+  var m = req.params.month;
+  
+  sql.query('SELECT DATE_FORMAT(orderDate,"%d-%m-%Y") AS orderDate, SUM(totalAmount) AS sumTotalAmount FROM `ORDERS` WHERE MONTH(orderDate)=' + m + ' AND YEAR(orderDate)='+y+' GROUP By DATE_FORMAT(orderDate,"%d-%m-%Y") ORDER BY orderDate', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order list.' });
+  });
+  
+});
+
 // Retrieve all order list
 router.get('/get/all/activeOrder', (req, res) => {
   //var d = getShortDateYYYYMMDD();
@@ -51,6 +65,18 @@ router.get('/get/all/activeOrder', (req, res) => {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order list.' });
   });
+});
+
+// Retrieve all order by date
+router.get('/get/orderByDate/:searchDate', (req, res) => {
+  var d = moment(req.params.searchDate).format("DD-MM-YYYY");
+  console.log(d);
+
+  sql.query('SELECT * FROM ORDERS WHERE DATE_FORMAT(ORDERS.orderDate, "%d-%m-%Y") = "'+d+'"', function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'order list.' });
+  });
+  
 });
 
 router.get('/get/order/:id', (req, res) => {
@@ -81,10 +107,14 @@ router.post('/addNew/order', function (req, res) {
 router.put('/update/order', function (req, res) {
   let orderId = req.body.id;
   let order = req.body;
+  //fix data time format
+  order.orderDate = moment(order.orderDate).format("YYYY-MM-DD HH:mm:ss");
+  console.log(order.orderDate);
+
   if (!orderId || !order) {
     return res.status(400).send({ error: order, message: 'Please provide order and orderId' });
   }
-  sql.query("UPDATE ORDERS SET ? WHERE id = ?", [{ totalAmount: order.totalAmount, deliveryAddressId: order.deliveryAddressId }, orderId], function (error, results, fields) {
+  sql.query("UPDATE ORDERS SET ? WHERE id = ?", [{ orderDate: order.orderDate, totalAmount: order.totalAmount, deliveryAddressId: order.deliveryAddressId }, orderId], function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order has been updated successfully.' });
   });
