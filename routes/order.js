@@ -97,7 +97,7 @@ router.post('/addNew/order', function (req, res) {
   if (!order) {
     return res.status(400).send({ error: true, message: 'Please provide order' });
   }
-  sql.query("INSERT INTO ORDERS SET ? ", { totalAmount: order.totalAmount, status: orderStatus }, function (error, results, fields) {
+  sql.query("INSERT INTO ORDERS SET ? ", { totalAmount: order.totalAmount, status: orderStatus, deliveryAddressId: order.deliveryAddressId }, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'New order has been created successfully.' });
   });
