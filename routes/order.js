@@ -43,7 +43,7 @@ router.get('/get/summaryOrder/:year/:month', (req, res) => {
   var y = req.params.year;
   var m = req.params.month;
   
-  sql.query('SELECT DATE_FORMAT(orderDate,"%Y-%m-%d") AS orderDate, SUM(totalAmount) AS sumTotalAmount, deliveryAddressId FROM `ORDERS` WHERE MONTH(orderDate)=' + m + ' AND YEAR(orderDate)='+y+' GROUP By DATE_FORMAT(orderDate,"%d-%m-%Y"), deliveryAddressId ORDER BY orderDate', function (error, results, fields) {
+  sql.query('SELECT DATE_FORMAT(orderDate,"%Y-%m-%d") AS orderDate, SUM(totalAmount) AS sumTotalAmount, deliveryAddressId FROM `ORDERS` WHERE MONTH(orderDate)=' + m + ' AND YEAR(orderDate)='+y+' GROUP By DATE_FORMAT(orderDate,"%Y-%m-%d"), deliveryAddressId ORDER BY orderDate', function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'order list.' });
   });
