@@ -58,12 +58,16 @@ router.get('/get/menuByType/:menuTypeId', (req, res) => {
 router.post('/addNew', async function (req, res) {
   let menu = req.body;
 
-  // save file in server
-  // decode image data back to original from url frindly
-  var imgData = base64_url_decode(menu.imageData);
-  // save file
-  var storageUrl = "../3seasonthai/images/menuImages/";
-  saveImage(imgData, storageUrl, menu.pictureName);
+  if (menu.imageData != null)
+  {
+    // save file in server
+    // decode image data back to original from url frindly
+    var imgData = base64_url_decode(menu.imageData);
+    // save file
+    var storageUrl = "../3seasonthai/images/menuImages/";
+    saveImage(imgData, storageUrl, menu.pictureName);
+  }
+  
 
   console.log(menu);
   if (!menu) {
