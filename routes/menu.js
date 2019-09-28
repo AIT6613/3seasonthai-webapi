@@ -55,21 +55,33 @@ router.get('/get/menuByType/:menuTypeId', (req, res) => {
 });
 
 // Add a new menu  
-router.post('/addNew', function (req, res) {
+router.post('/addNew', async function (req, res) {
   let menu = req.body;
-  let pictureName = req.body.pictureName;
-  if (!pictureName) {
-    pictureName = "";
-  }
+
+  // save file in server
+  // decode image data back to original from url frindly
+  var imgData = base64_url_decode(menu.imageData);
+  // save file
+  var storageUrl = "../3seasonthai/images/menuImages/";
+  saveImage(imgData, storageUrl, menu.pictureName);
 
   console.log(menu);
   if (!menu) {
     return res.status(400).send({ error: true, message: 'Please provide product' });
   }
-  sql.query("INSERT INTO MENUITEMS SET ? ", { name: menu.name, description: menu.description, pictureName: pictureName, price: menu.price, isAvailable: menu.isAvailable, isSelectMeatChoice: menu.isSelectMeatChoice, menuTypeId: menu.menuTypeId }, function (error, results, fields) {
+  sql.query("INSERT INTO MENUITEMS SET ? ", {
+    name: menu.name, description: menu.description, pictureName: menu
+      .pictureName, price: menu.price, isAvailable: menu.isAvailable, isSelectMeatChoice: menu.isSelectMeatChoice, menuTypeId: menu.menuTypeId
+  }, function (error, results, fields) {
+
     if (error) throw error;
+    
+
     return res.send({ error: false, data: results, message: 'New menu has been created successfully.' });
+
+
   });
+
 });
 
 // update product
@@ -450,7 +462,7 @@ router.put('/update/menuType', function (req, res) {
 
 // delete menu type
 router.delete('/delete/menuType/:id', function (req, res) {
-  let id = req.params.id; 
+  let id = req.params.id;
   // check if not have symbol id, return error
   if (!id) {
     return res.status(400).send({ error: true, message: 'Please provide menu type id' });
@@ -464,27 +476,21 @@ router.delete('/delete/menuType/:id', function (req, res) {
   });
 });
 
+// save image to server by decode base64 before save
+function saveImage(base64ImageData,url,filename) {
+  console.log('convert image');
+  var base64Data = base64ImageData.replace(/^data:image\/png;base64,/, "");
 
-/*
-function validateEnrolment(enrolment) {
-	// set schema to check for each variable. each variable can set different validation
-	const schema = {
-		id: Joi.optional(),
-		offerLetterDetailId: Joi.required(),
-		studentId: Joi.required(),
-		courseId: Joi.required(),
-		tasId: Joi.optional(),
-		startDate: Joi.optional(),
-		endDate: Joi.optional(),
-		status: Joi.required(),
-		weeks: Joi.optional(),
-		durationHours: Joi.optional(),
-		note: Joi.optional(),
-		createDate: Joi.optional()
-	};
-	// return ressult of validation to result
-	return Joi.validate(enrolment, schema);
+  require("fs").writeFile(url + filename, base64Data, 'base64', function (result,err) {
+    console.log(result);
+  });
 }
-*/
+
+function base64_url_decode(input) {
+  input = (input + '===').slice(0, input.length + (input.length % 4));
+  input = input.replace(/-/g, '+').replace(/_/g, '/');
+  return input;
+ }
+
 
 module.exports = router;
