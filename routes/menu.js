@@ -3,6 +3,7 @@ const Joi = require('joi'); // use for validation
 const express = require("express");
 const router = express.Router();
 
+
 var sql = require('../db.js');
 var webToken = require('../configs/key').webToken;
 
@@ -64,7 +65,8 @@ router.post('/addNew', async function (req, res) {
     // decode image data back to original from url frindly
     var imgData = base64_url_decode(menu.imageData);
     // save file
-    var storageUrl = "../3seasonthai/images/menuImages/";
+    //var storageUrl = "../3seasonthai/images/menuImages/";
+    var storageUrl = "../3seasonthai/";
     saveImage(imgData, storageUrl, menu.pictureName);
   }
   
